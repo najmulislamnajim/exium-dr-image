@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Three Generation Images</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-container {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        input[type="text"], select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input[type="file"] {
+            padding: 8px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .error {
+            color: red;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Upload Three Generation Images</h2>
+        {% if messages %}
+            {% for message in messages %}
+                <p class="{% if message.tags == 'error' %}error{% else %}success{% endif %}">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="territory">Territory</label>
+                <select id="territory" name="territory" required>
+                    <option value="">Select a Territory</option>
+                    {% for territory in territories %}
+                        <option value="{{ territory.id }}">{{ territory.territory }} - {{ territory.territory_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="dr_rpl_id">Doctor RPL ID</label>
+                <input type="text" id="dr_rpl_id" name="dr_rpl_id" maxlength="10" required>
+            </div>
+            <div class="form-group">
+                <label for="dr_name">Doctor Name</label>
+                <input type="text" id="dr_name" name="dr_name" maxlength="100" required>
+            </div>
+            <div class="form-group">
+                <label for="dr_image">Doctor Image</label>
+                <input type="file" id="dr_image" name="dr_image" accept="image/jpeg,image/png">
+            </div>
+            <div class="form-group">
+                <label for="dr_parents_image">Parents Image</label>
+                <input type="file" id="dr_parents_image" name="dr_parents_image" accept="image/jpeg,image/png">
+            </div>
+            <div class="form-group">
+                <label for="dr_children_image">Children Image</label>
+                <input type="file" id="dr_children_image" name="dr_children_image" accept="image/jpeg,image/png">
+            </div>
+            <button type="submit">Upload Images</button>
+        </form>
+    </div>
+</body>
+</html>
