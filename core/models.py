@@ -47,14 +47,17 @@ def get_image_upload_path(instance, filename):
     # Extract file extension
     ext = os.path.splitext(filename)[1]
     
+    territory_obj = Territory.objects.get(territory=instance.territory.territory)
+    zone = territory_obj.zone_name
+    region = territory_obj.region_name
     # Construct filename
-    filename = f"{instance.territory.territory}_{instance.dr_rpl_id}_{instance.dr_name}_{image_type}{ext}"
+    filename = f"{zone}_{region}_{instance.territory.territory}_{instance.dr_rpl_id}_{instance.dr_name}_{image_type}{ext}"
     
     # Construct folder name 
     dr_folder = instance.dr_rpl_id + ' - ' + instance.dr_name
     
     # Construct path and return
-    return os.path.join('dr_images', instance.territory.territory, dr_folder, filename)
+    return os.path.join('dr_images',zone, region, instance.territory.territory, dr_folder, filename)
         
 class ThreeGenImage(models.Model):
     """
@@ -71,9 +74,9 @@ class ThreeGenImage(models.Model):
     territory = models.ForeignKey(Territory, on_delete=models.CASCADE)
     dr_rpl_id = models.CharField(max_length=10, unique=True)
     dr_name = models.CharField(max_length=100)
-    dr_image = models.ImageField(upload_to=get_image_upload_path, null=True, blank=True)
-    dr_parents_image = models.ImageField(upload_to=get_image_upload_path, null=True, blank=True)
-    dr_children_image = models.ImageField(upload_to=get_image_upload_path, null=True, blank=True)
+    dr_image = models.ImageField(upload_to=get_image_upload_path, null=True, blank=True, max_length=255)
+    dr_parents_image = models.ImageField(upload_to=get_image_upload_path, null=True, blank=True, max_length=255)
+    dr_children_image = models.ImageField(upload_to=get_image_upload_path, null=True, blank=True, max_length=255)
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     def clean(self):
